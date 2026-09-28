@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>USPEED(新报价) vs 谷仓 · 全链路成本对比（源直读核对版）</title>
+<style>
+:root{--bg:#0f1419;--card:#1a2129;--line:#2a333d;--txt:#e6edf3;--mut:#9aa7b3;--acc:#4ea1ff;--grn:#3fb950;--red:#f85149;}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,'Segoe UI',Roboto,'Microsoft YaHei',sans-serif;line-height:1.65;padding:24px;}
+h1{font-size:23px;margin:0 0 4px} h2{font-size:18px;margin:26px 0 10px;color:var(--acc);border-left:4px solid var(--acc);padding-left:10px}
+h3{font-size:15px;margin:16px 0 8px} .sub{color:var(--mut);font-size:13px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:14px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#222b35;color:var(--txt);font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.gc{color:#7ee787} .us{color:#79c0ff} .win{color:var(--grn);font-weight:700}
+.mut{color:var(--mut);font-size:12px}
+.kpi{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0} .kpi .b{flex:1;min-width:160px;background:#11171d;border:1px solid var(--line);border-radius:8px;padding:12px}
+.kpi .v{font-size:20px;font-weight:700} .kpi .l{font-size:12px;color:var(--mut)}
+.warn{background:#2a2410;border:1px solid #5a4a14;color:#f0d68a;border-radius:8px;padding:10px 14px;font-size:13px;margin:10px 0}
+.err{background:#2a1416;border:1px solid #5a1f24;color:#f5b9bd;border-radius:8px;padding:10px 14px;font-size:13px;margin:10px 0}
+.ok{background:#11231a;border:1px solid #1f5a3a;color:#9fe6c0;border-radius:8px;padding:10px 14px;font-size:13px;margin:10px 0}
+.sumrow{font-weight:700;background:#1f2730}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0;font-size:13px}
+.flow .node{background:#11171d;border:1px solid var(--line);border-radius:6px;padding:6px 10px}
+.flow .arr{color:var(--mut)}
+</style></head><body>
+<h1>USPEED（新报价） vs 谷仓 · 海外仓全链路成本对比（源直读核对版）</h1>
+<div class="sub">测算对象 SKU <b>JH306B04-1</b>（S货型）· 统一折算 <b>USD/件</b> · 仓租另列 USD/件·月 · 数据实读自谷仓《海外仓仓储服务报价_仓储2.1(20260121)》与 USPEED《一件代发价格表vip栾总》</div>
+
+<div class="card">
+<h3>★ 结论先行</h3>
+<div class="ok"><b>统一算法（两家同口径）：按真实订单结构 商业 83.3% + 住宅 16.7% 折算尾程，没有"开关"。</b>
+<ul style="margin:6px 0 0">
+<li><b>谷仓</b>：住宅单实测 100% 走 GC Parcel(USPS)、<b>不加住宅费</b>（住宅实结 $3.74 还低于商业 $4.16/件）→ 谷仓尾程恒 <b>$7.11/件</b>（Zone8），住宅不抬价。</li>
+<li><b>USPEED</b>：住宅单按其报价必须走 UPS 住宅($10.09) 或 USPS GA($11.13)，均高于商业 $6.53 → 折 16.7% 后 USPEED 尾程 = <b>$7.12~7.30/件</b>，反而比谷仓贵。</li>
+</ul>
+<b>确定性结论：谷仓在美东、美西、任意周转天数都确定胜出。</b>
+<ul style="margin:6px 0 0">
+<li>30天：美西 谷仓优 <b>$0.12/件</b>；美东 谷仓优 <b>$0.70/件</b></li>
+<li>90天：美西 谷仓优 <b>$0.66/件</b>；美东 谷仓优 <b>$1.38/件</b></li>
+<li>周转天数 D 只影响"赢多少"，不影响"谁赢"——谷仓仓租每一档都更便宜，D 越大差距越大，不存在翻转点。</li>
+</ul>
+注：USPEED"短周转微优"只在"住宅单也不加费"的错误假设下出现（其报价本身列有 UPS 住宅 +$3.56 / USPS GA 加费档），不成立；最坏路由（USPEED 住宅被迫走 UPS +$10.09）谷仓再多省 ~$3/件，实测不发生。</div>
+</div>
+
+<div class="err"><b>⚠ 相对最早 chain_compare.html 的两处修正（本版已订正）</b>
+<ul style="margin:6px 0 0">
+<li><b>仓储模型：</b>旧版把 USPEED 仓储平推为 $1.0/CBM/天；实读新报价为<b>分层价</b>（31–60=1.0，61–90=1.2，91–180=1.8，181–270=2.2，271–365=3.5）。谷仓在<b>每一档</b>都比 USPEED 便宜，旧版低估了谷仓长库龄优势。</li>
+<li><b>USPEED 尾程：</b>旧版把 UPS Ground Commercial Zone8 用 1lb→5lb 线性插值成 ≈$7.08；实读报价表 1–4lb 为<b>平价 $6.53055</b>。旧版高估了 USPEED 尾程成本。</li>
+<li><b>澄清：</b>USPS Ground Advantage 实际覆盖 0–70lb（旧版误以为只到 1lb）；JH306 取 3lb Zone8 = $11.13，但高于 UPS Commercial，非最优渠道。</li>
+</ul></div>
+
+<h2>一、测算基准与折算假设</h2>
+<div class="card">
+<table>
+<tr><th>参数</th><th>取值</th><th>说明</th></tr>
+<tr><td>每件体积</td><td class="n">0.01536 CBM</td><td>箱规 ÷ 8 件</td></tr>
+<tr><td>每件实重</td><td class="n">1.275 kg（2.81 lb）</td><td>S货型：USPEED 0–1.5KG 段 / 谷仓 1–3KG 段</td></tr>
+<tr><td>装箱</td><td class="n">8 件/箱</td><td>把「每箱/每CBM」折算到「每件」</td></tr>
+<tr><td>仓租持有期</td><td class="n">30天首档 / 90天对照</td><td>分层见 §3；D 为可调变量</td></tr>
+<tr><td>尾程分区</td><td class="n">Zone 8（跨区代表）</td><td>美仓发往对侧主要消费区</td></tr>
+<tr><td>谷仓口径</td><td class="n">实结价</td><td>卸货×0.9632、分拣×0.7；上架/拣货按牌价（注称已含折扣）</td></tr>
+</table>
+<div class="warn">同口径对齐：谷仓入库 = 卸货 + 分拣 + 上架；USPEED 美西入库费(含上架分拣) + 卸货；USPEED 美东 = 卸货（上架含在库内操作费）。各渠道按「同口径环节」比较，避免重复/遗漏。</div>
+</div>
+
+<h2>二、① 入库费（USD/件）</h2>
+<div class="card">
+<table>
+<tr><th>费用项</th><th>谷仓 USWE</th><th class="n">USD/件</th><th>USPEED 美西</th><th class="n">USD/件</th></tr>
+<tr><td>卸货费</td><td>6.80 /CBM</td><td class="n">0.1045</td><td>2 /箱</td><td class="n">0.2500</td></tr>
+<tr><td>来货分拣</td><td>0.56 /SKU(每箱)</td><td class="n">0.0700</td><td rowspan="2">入库费 0.30/件（含上架+分拣）</td><td rowspan="2" class="n">0.3000</td></tr>
+<tr><td>上架（入库操作费 1–3kg）</td><td>0.36 /件</td><td class="n">0.3600</td></tr>
+<tr><td>超箱附加费</td><td>0.20 /箱</td><td class="n">0.0250</td><td>—</td><td class="n">—</td></tr>
+<tr class="sumrow"><td>美西入库合计</td><td></td><td class="n gc">0.56</td><td></td><td class="n us">0.55</td></tr>
+</table>
+<table>
+<tr><th>费用项</th><th>谷仓 USEA</th><th class="n">USD/件</th><th>USPEED 美东</th><th class="n">USD/件</th></tr>
+<tr><td>卸货费</td><td>6.80 /CBM</td><td class="n">0.1045</td><td>2 /箱</td><td class="n">0.2500</td></tr>
+<tr><td>来货分拣</td><td>0.49 /SKU(每箱)</td><td class="n">0.0612</td><td rowspan="2">库内操作费已含配货/贴单/出库</td><td rowspan="2" class="n">0.2500</td></tr>
+<tr><td>上架（入库操作费 1–3kg）</td><td>0.32 /件</td><td class="n">0.3200</td></tr>
+<tr><td>超箱附加费</td><td>0.18 /箱</td><td class="n">0.0225</td><td>—</td><td class="n">—</td></tr>
+<tr class="sumrow"><td>美东入库合计</td><td></td><td class="n gc">0.51</td><td></td><td class="n us">0.25</td></tr>
+</table>
+<p class="mut">入库：美西基本持平（USPEED 微优约 0.01）；美东 USPEED 卸货更便宜（0.51 vs 0.25），但美东出库差距更大（见下）。</p>
+</div>
+
+<h2>三、② 出库操作费（USD/件）</h2>
+<div class="card">
+<table>
+<tr><th>费用项</th><th>谷仓 USWE</th><th class="n">USD/件</th><th>USPEED 美西</th><th class="n">USD/件</th></tr>
+<tr><td>拣货/出库操作费</td><td>0.51 /件（1–3kg）</td><td class="n gc">0.5100</td><td>0.50 /件（0–1.5kg）</td><td class="n us">0.5000</td></tr>
+</table>
+<table>
+<tr><th>费用项</th><th>谷仓 USEA</th><th class="n">USD/件</th><th>USPEED 美东</th><th class="n">USD/件</th></tr>
+<tr><td>拣货/出库操作费</td><td>0.45 /件（1–3kg）</td><td class="n gc">0.4500</td><td>库内操作费 1.20 /件（2.01–5lb段）</td><td class="n us">1.2000</td></tr>
+</table>
+<p class="mut">出库：美西持平（差 $0.01）；<b>美东谷仓低 $0.75/件</b>（0.45 vs 1.20），是美东谷仓占优的关键。</p>
+</div>
+
+<h2>四、③ 仓租（USD/CBM/天 与 USD/件·月）— 本版核心修正</h2>
+<div class="card">
+<table>
+<tr><th>库龄段</th><th class="n">谷仓 USWE(S)</th><th class="n">谷仓/件·月</th><th class="n">谷仓 USEA(S)</th><th class="n">谷仓/件·月</th><th class="n">USPEED</th><th class="n">USPEED/件·月</th><th>谁更优</th></tr>
+<tr><td>0–30天(免租)</td><td class='n gc'>0.00</td><td class='n gc'>0.00</td><td class='n gc'>0.00</td><td class='n gc'>0.00</td><td class='n us'>0.00</td><td class='n us'>0.00</td><td class='n win'>—</td></tr><tr><td>31–60天</td><td class='n gc'>0.72</td><td class='n gc'>0.33</td><td class='n gc'>0.57</td><td class='n gc'>0.26</td><td class='n us'>1.00</td><td class='n us'>0.46</td><td class='n win'>谷仓</td></tr><tr><td>61–90天</td><td class='n gc'>0.72</td><td class='n gc'>0.33</td><td class='n gc'>0.57</td><td class='n gc'>0.26</td><td class='n us'>1.20</td><td class='n us'>0.55</td><td class='n win'>谷仓</td></tr><tr><td>91–180天</td><td class='n gc'>1.19</td><td class='n gc'>0.55</td><td class='n gc'>0.95</td><td class='n gc'>0.44</td><td class='n us'>1.80</td><td class='n us'>0.83</td><td class='n win'>谷仓</td></tr><tr><td>181–270天</td><td class='n gc'>1.58</td><td class='n gc'>0.73</td><td class='n gc'>1.26</td><td class='n gc'>0.58</td><td class='n us'>2.20</td><td class='n us'>1.01</td><td class='n win'>谷仓</td></tr><tr><td>271–365天</td><td class='n gc'>2.16</td><td class='n gc'>1.00</td><td class='n gc'>1.70</td><td class='n gc'>0.78</td><td class='n us'>3.50</td><td class='n us'>1.61</td><td class='n win'>谷仓</td></tr></table>
+<div class="ok">谷仓仓租<b>每个计费档都低于 USPEED</b>：31–60天低 $0.28/CBM/天，271–365天低 $1.34/CBM/天。且谷仓超库龄附加费是「叠加」在基础价上（源表实锤"在【仓租费】基础上加收"），USPEED 是「跳档」——长库龄时谷仓相对优势进一步拉大。</div>
+<p class="mut">仓租累计差（90天，仅31–90首档无超库龄）：美西 谷仓省 <b>0.66</b>/件·90天，美东 谷仓省 <b>0.87</b>/件·90天。D 越大差距越大。</p>
+</div>
+
+<h2>五、④ 尾程运费（USD/件，Zone8）— 决定性变量（约占整单 80%–85%）</h2>
+<div class="card">
+<table>
+<tr><th>渠道 / 路由</th><th class="n">谷仓 GC Parcel</th><th class="n">USPEED UPS Ground Commercial</th><th class="n">USPEED UPS Residential</th><th class="n">USPEED USPS GA</th></tr>
+<tr><td>计费重</td><td class="n">1.92 kg*</td><td class="n">2.81 lb</td><td class="n">2.81 lb</td><td class="n">2.81 lb(→3lb)</td></tr>
+<tr><td>Zone8 费率</td><td class="n gc">7.11</td><td class="n us win">6.53</td><td class="n us">10.09</td><td class="n us">11.13</td></tr>
+<tr><td>住宅附加费？</td><td class="n">无（实测）</td><td class="n">无（商业）</td><td class="n">有 +$3~4</td><td class="n">无</td></tr>
+</table>
+<div class="warn"><b>住宅费处理（统一折算依据，非"开关"）：</b>USPS 系（谷仓 GC Parcel、USPS GA）住宅<b>不收附加费</b>——实测该账号住宅单 100% 走 GC Parcel，谷仓住宅不增成本；USPEED 的住宅地址按报价须加费（UPS $6.53→10.09，或 USPS GA 11.13）。§6 权威口径即按 商业83.3% + 住宅16.7% 统一折入两家尾程。</div>
+<div class="mut">*谷仓尾程按 max(实重, 材积/8000)=1.92kg 计费；USPEED 按实重 2.81lb（UPS 1–4lb 平价）。谷仓 GC Parcel 7.11 来自谷仓另一份尾程报价（本次仓储2.1 不含尾程），其是否对住宅加费以谷仓尾程报价为准；实测账单显示该账号住宅走 GC Parcel 未加费。</div>
+</div>
+
+<h2>六、单件总成本（Zone8，含仓租 + 1次尾程）</h2>
+<div class="card">
+<table>
+<tr><th>场景（尾程走最优路由 / 住宅走USPS系）</th><th class="n">谷仓 USWE</th><th class="n">USPEED 美西</th><th>差额</th><th class="n">谷仓 USEA</th><th class="n">USPEED 美东</th><th>差额</th></tr>
+<tr class="sumrow"><td>30天持有 基准（刚过免租）</td><td class="n gc">8.51</td><td class="n us">8.04</td><td>USPEED 优 0.47</td><td class="n gc">8.33</td><td class="n us">8.44</td><td>谷仓 优 0.11</td></tr>
+<tr class="sumrow"><td>D=90天（仅31–90首档）</td><td class="n gc">9.17</td><td class="n us">9.24</td><td>谷仓 优 0.06</td><td class="n gc">8.86</td><td class="n us">9.64</td><td>谷仓 优 0.78</td></tr>
+</table>
+<table>
+<tr><th>最坏情形（USPEED 住宅被迫走 UPS +10.09）</th><th class="n">谷仓 USWE</th><th class="n">USPEED 美西</th><th>差额</th><th class="n">谷仓 USEA</th><th class="n">USPEED 美东</th><th>差额</th></tr>
+<tr class="sumrow"><td>30天持有</td><td class="n gc">8.51</td><td class="n us">11.60</td><td>谷仓 优 3.09</td><td class="n gc">8.33</td><td class="n us">12.00</td><td>谷仓 优 3.67</td></tr>
+</table>
+<p class="mut">说明：上表为"双方住宅都不加费"的乐观参照（USPEED 住宅也按商业价计）；<b>权威口径请看下方"真实混合"表</b>（已按 商业83.3% + 住宅16.7% 统一折算）。D 越大谷仓优势越明显。</p>
+<h3>真实混合场景（把住宅 16.7% 计入 USPEED 尾程）</h3>
+<table>
+<tr><th>场景</th><th class="n">谷仓 USWE</th><th class="n">USPEED 美西(尾程混合)</th><th>差额</th><th class="n">谷仓 USEA</th><th class="n">USPEED 美东(尾程混合)</th><th>差额</th></tr>
+<tr class="sumrow"><td>30天持有 · USPEED 住宅走 UPS 住宅(+$10.09)</td><td class="n gc">8.51</td><td class="n us">8.64</td><td>谷仓 优 0.12</td><td class="n gc">8.33</td><td class="n us">9.04</td><td>谷仓 优 0.70</td></tr>
+<tr class="sumrow"><td>30天持有 · USPEED 住宅走 USPS GA($11.13)</td><td class="n gc">8.51</td><td class="n us">8.81</td><td>谷仓 优 0.30</td><td class="n gc">8.33</td><td class="n us">9.21</td><td>谷仓 优 0.88</td></tr>
+<tr class="sumrow"><td>90天持有 · USPEED 住宅走 UPS 住宅(+$10.09)</td><td class="n gc">9.17</td><td class="n us">9.83</td><td>谷仓 优 0.66</td><td class="n gc">8.86</td><td class="n us">10.23</td><td>谷仓 优 1.38</td></tr>
+<tr class="sumrow"><td>90天持有 · USPEED 住宅走 USPS GA($11.13)</td><td class="n gc">9.17</td><td class="n us">10.01</td><td>谷仓 优 0.83</td><td class="n gc">8.86</td><td class="n us">10.41</td><td>谷仓 优 1.55</td></tr>
+</table>
+<div class="warn"><b>关键修正：</b>谷仓住宅 100% 走 GC Parcel 实测<b>不加费</b>，故谷仓尾程恒为 $7.11；USPEED 住宅单按报价需走 UPS 住宅(+$3.56) 或 USPS GA($11.13)，折 16.7% 后 USPEED 尾程升至 <b>$7.12~$7.30</b>，<b>吃掉其相对谷仓的 $0.58 尾程优势</b>。因此上表"美西短周转 USPEED 微优 $0.47"仅为"USPEED 全单按商业尾程、忽略住宅"的乐观假设；真实混合下<b>美西也谷仓占优（30天 谷仓优 $0.12~0.30）</b>。</div>
+</div>
+
+<h2>七、决策依据（住宅比例已统一并入，无"开关"）</h2>
+<div class="card">
+<div class="flow">
+<span class="node">选仓</span><span class="arr">→</span>
+<span class="node">尾程按 商业83.3% + 住宅16.7% 统一折算</span><span class="arr">→</span>
+<span class="node win">谷仓 两区域、任意周转天数 全胜</span>
+</div>
+<ul>
+<li><b>尾程（折算后）：</b>谷仓 $7.11 恒定（住宅实测不加费）；USPEED 折 16.7% 住宅加费后 <b>$7.12~7.30</b>——其 $0.58 牌价优势被住宅占比吃掉并反超。</li>
+<li><b>仓租（每一档谷仓都更便宜）：</b>31–60天低 $0.28/CBM/天；90天累计每件省 美西 $0.66 / 美东 $0.87，且 USPEED 长库龄跳档更贵（271–365天 $3.5）。</li>
+<li><b>周转 D 的作用：</b>只放大/缩小差距，<b>不改变赢家</b>——最短的 30 天谷仓已全胜，D 越长越利谷仓，<b>不存在"翻转点"</b>。</li>
+<li><b>落地一句话：</b><b>美东、美西、任意周转天数，都选谷仓。</b>不需要按订单住宅比例或尾程路由再做切换；最坏路由（USPEED 住宅被迫走 UPS +$10.09）谷仓再多省 ~$3/件，实测不发生。</li>
+</ul>
+<div class="warn"><b>与已部署定稿 chain_decision.html 的差异说明（务必注意）：</b>定稿版基于「USPEED 仓储 = 平价 $1.0/CBM/天（无阶梯）」的旧假设，得出「谷仓长库龄(美西&gt;149天/美东&gt;267天) 仓储反超 USPEED、综合反转 美西≈150天/美东≈400天，即长库龄时 USPEED 翻盘」的结论。本份<b>新 USPEED 报价实为分层价（31–60=1.0，61–90=1.2，91–180=1.8，181–270=2.2，271–365=3.5）</b>——USPEED 长库龄仓储比旧假设贵得多，谷仓仓储在<b>每一档都更便宜</b>；叠加本版把<b>住宅 16.7% 统一折入 USPEED 尾程</b>（吃掉其 $0.58 牌价优势、反超为 $7.12~7.30），两个修正共同把「美西短周转 USPEED 微优」的假象也抹掉了。<b>结论完全反转：谷仓在美东、美西、任意周转天数都确定胜出，不存在翻转点</b>（定稿旧口径已过期）。两版尾程路由结论（住宅走 GC Parcel 无附加费）一致；差异仅来自①新报价分层仓储 与②住宅占比统一折算 两个修正。若 USPEED 后续改回平价仓储且住宅也不加费，可回退到定稿的 150/400 口径，但当前报价下不成立。</div>
+</div>
+
+<div class="card">
+<h3>八、数据来源与待确认项</h3>
+<p class="mut">
+• 谷仓：《海外仓仓储服务报价_仓储2.1（20260121）》——入库/存储/出库费率已实读核验；尾程 GC Parcel 来自谷仓另一份尾程报价（本次未含），其住宅加费规则以谷仓尾程报价为准（实测账单证伪"住宅加费"）。<br>
+• USPEED：《一件代发价格表vip栾总》——卸货/入库/出库/仓储分层/USPS/UPS 费率已实读核验。<br>
+• 真实账单实证：谷仓后台导出"最近美国订单"显示住宅 16.7%、100% 走 GC Parcel(USPS) 无附加费、住宅运费反低于商业——详见已部署 <b>chain_decision.html</b> 定稿版及支撑明细。<br>
+• 全部为单价级测算，未含头程/包材/退件/盘点等；实际单量折扣（USPEED 日单>100 可议）、账户专属折扣未计入敏感性。<br>
+• 本表仅对比两家公开/报价单价，不构成采购建议；最终以双方正式合同价为准。
+</p>
+</div>
+</body></html>
